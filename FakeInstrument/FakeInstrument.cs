@@ -87,7 +87,7 @@ namespace FakeInstrument
                         {
                             int spinSpeed = int.Parse(request.Parameters);
 
-                            if (this.instrumentState.Status == InstrumentState.InstrumentStatus.Idle)
+                            if (this.instrumentState.Status != InstrumentState.InstrumentStatus.Idle && this.instrumentState.Status != InstrumentState.InstrumentStatus.Spinning)
                             {
                                 this.SendError("Spin can only be enabled if the instrument is in an idle state", tcpClient.Client);
                             }
@@ -146,7 +146,7 @@ namespace FakeInstrument
                         }
                     case Command.StartExperiment:
                         {
-                            if (this.instrumentState.Status == InstrumentState.InstrumentStatus.Idle)
+                            if (this.instrumentState.Status != InstrumentState.InstrumentStatus.Idle)
                             {
                                 this.SendError("Experiments can only be started in the instrument idle state", tcpClient.Client);
                             }
