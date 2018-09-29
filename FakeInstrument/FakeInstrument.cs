@@ -89,7 +89,7 @@ namespace FakeInstrument
 
                             if (this.instrumentState.Status > InstrumentState.InstrumentStatus.Spinning)
                             {
-                                this.SendError("Spin can only be enabled if the instrument is in an idle state", tcpClient.Client);
+                                this.SendError($"Spin is only allowed in the '{InstrumentState.InstrumentStatus.Idle}' or '{InstrumentState.InstrumentStatus.Spinning}' states", tcpClient.Client);
                             }
                             else if (spinSpeed >= 0)
                             {
@@ -187,11 +187,13 @@ namespace FakeInstrument
                 // Math doesn't perfectly check out but close enough for now...
                 var percentageChange = (RefreshRate / (float)(this.instrumentState.Experiment.TimeToComplete * 1000)) * 100;
 
-                this.instrumentState.ExperimentPercentage += percentageChange;
-
-                if (this.instrumentState.ExperimentPercentage > 100)
+                if ((this.instrumentState.ExperimentPercentage + percentageChange) > 100)
                 {
                     this.instrumentState.ExperimentPercentage = 100;
+                }
+                else
+                {
+                    this.instrumentState.ExperimentPercentage += percentageChange;
                 }
 
                 if ((int)this.instrumentState.ExperimentPercentage == 100)
